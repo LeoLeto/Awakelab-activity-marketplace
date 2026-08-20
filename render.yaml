@@ -1,0 +1,27 @@
+# Blueprint de Render: define los dos servicios (web + capturas) para que se
+# desplieguen juntos con un solo "New Blueprint" al conectar el repositorio.
+# Documentación: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: awakelab-marketplace
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /login.php
+    envVars:
+      # Si Render acaba dando al servicio de capturas un nombre/host interno
+      # distinto al que suponemos aquí, basta con editar este valor a mano
+      # desde el panel de Render (Environment) sin tocar código.
+      - key: SCREENSHOT_SERVICE_URL
+        value: http://awakelab-marketplace-screenshot:4000/shot
+
+  - type: pserv
+    name: awakelab-marketplace-screenshot
+    runtime: docker
+    dockerfilePath: ./screenshot-service/Dockerfile
+    dockerContext: ./screenshot-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: 4000

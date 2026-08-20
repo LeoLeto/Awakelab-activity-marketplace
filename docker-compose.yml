@@ -1,0 +1,18 @@
+services:
+  web:
+    image: php:8.3-cli
+    container_name: awakelab-marketplace
+    working_dir: /app
+    command: php -S 0.0.0.0:8000 -t public
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    depends_on:
+      - screenshot
+
+  screenshot:
+    build: ./screenshot-service
+    container_name: awakelab-marketplace-screenshot
+    # Sin puerto publicado al host a propósito: solo lo debe alcanzar el
+    # servicio "web" dentro de la red interna del compose, nunca el exterior.

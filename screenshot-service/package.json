@@ -1,0 +1,12 @@
+{
+  "name": "awakelab-marketplace-screenshot",
+  "version": "1.0.0",
+  "description": "Servicio interno que captura una miniatura de un juego HTML autocontenido usando Chromium headless.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "puppeteer": "^23.0.0"
+  }
+}
