@@ -11,12 +11,19 @@
 
 /**
  * URL del servicio de capturas. En local (docker-compose) se llama
- * "screenshot" y escucha en el 4000, por eso es el valor por defecto; en
- * Render (u otro sitio) se sobreescribe con la variable de entorno
- * SCREENSHOT_SERVICE_URL, ya que ahí el nombre/puerto reales los asigna la
- * propia plataforma (ver render.yaml).
+ * "screenshot" y escucha en el 4000, por eso es el valor por defecto. En
+ * Render, la variable SCREENSHOT_SERVICE_HOSTPORT la rellena la propia
+ * plataforma (ver render.yaml, fromService/hostport) con la dirección
+ * interna real "host:puerto" del servicio de capturas — ahí ni el nombre
+ * ni el puerto están garantizados de antemano, por eso no se pueden fijar
+ * a mano como en local.
  */
 function awakegame_marketplace_screenshot_url(): string {
+    $hostport = getenv('SCREENSHOT_SERVICE_HOSTPORT');
+    if ($hostport !== false && trim($hostport) !== '') {
+        return 'http://' . trim($hostport) . '/shot';
+    }
+
     $env = getenv('SCREENSHOT_SERVICE_URL');
     return $env !== false && trim($env) !== '' ? $env : 'http://screenshot:4000/shot';
 }

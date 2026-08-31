@@ -10,18 +10,19 @@ services:
     plan: free
     healthCheckPath: /login.php
     envVars:
-      # Si Render acaba dando al servicio de capturas un nombre/host interno
-      # distinto al que suponemos aquí, basta con editar este valor a mano
-      # desde el panel de Render (Environment) sin tocar código.
-      - key: SCREENSHOT_SERVICE_URL
-        value: http://awakelab-marketplace-screenshot:4000/shot
+      # Render rellena esto solo con la dirección interna real del servicio
+      # de capturas (host:puerto) — no hace falta adivinarla a mano.
+      - key: SCREENSHOT_SERVICE_HOSTPORT
+        fromService:
+          name: awakelab-marketplace-screenshot
+          type: pserv
+          property: hostport
 
   - type: pserv
     name: awakelab-marketplace-screenshot
     runtime: docker
     dockerfilePath: ./screenshot-service/Dockerfile
     dockerContext: ./screenshot-service
-    plan: free
-    envVars:
-      - key: PORT
-        value: 4000
+    # Los servicios privados no tienen plan gratuito en Render; este es el
+    # más pequeño disponible.
+    plan: 0.5c-512mb

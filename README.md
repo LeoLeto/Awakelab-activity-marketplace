@@ -44,12 +44,17 @@ primera vez que se accede a cualquier página.
 4. Sigue el mismo "Primer uso" de arriba, cambiando `localhost:8000` por
    esa URL.
 
-**Aviso importante**: en el plan gratuito de Render, el disco no es
-permanente — la base de datos SQLite (colegios, admins, juegos publicados)
-se borra cada vez que se vuelve a desplegar el servicio (por ejemplo, al
-subir un cambio de código). Vale para enseñar una demo o probarlo, pero no
-para guardar datos reales de forma indefinida; para eso haría falta un disco
-persistente (plan de pago) o migrar a una base de datos externa.
+**Avisos importantes**:
+- En el plan gratuito de Render, el disco no es permanente — la base de
+  datos SQLite (colegios, admins, juegos publicados) se borra cada vez que
+  se vuelve a desplegar el servicio (por ejemplo, al subir un cambio de
+  código). Vale para enseñar una demo o probarlo, pero no para guardar datos
+  reales de forma indefinida; para eso haría falta un disco persistente
+  (plan de pago) o migrar a una base de datos externa.
+- El servicio de capturas (`awakelab-marketplace-screenshot`) es un
+  "servicio privado" en Render, que **no tiene plan gratuito** — usa el más
+  pequeño de pago (`0.5c-512mb`). El servicio web (`awakelab-marketplace`)
+  sí puede ir en el plan gratuito.
 
 Si Render acaba nombrando el servicio de capturas de forma distinta a la
 que se supone en `render.yaml`, solo hay que editar la variable de entorno
