@@ -1,5 +1,7 @@
-# Blueprint de Render: define los dos servicios (web + capturas) para que se
-# desplieguen juntos con un solo "New Blueprint" al conectar el repositorio.
+# Blueprint de Render: un único servicio web (PHP + capturas juntos en el
+# mismo contenedor, ver Dockerfile) — el plan gratuito de Render no permite
+# "servicios privados", así que aquí no se usan, a diferencia de local
+# (docker-compose.yml sí usa dos contenedores separados).
 # Documentación: https://render.com/docs/blueprint-spec
 services:
   - type: web
@@ -9,20 +11,3 @@ services:
     dockerContext: .
     plan: free
     healthCheckPath: /login.php
-    envVars:
-      # Render rellena esto solo con la dirección interna real del servicio
-      # de capturas (host:puerto) — no hace falta adivinarla a mano.
-      - key: SCREENSHOT_SERVICE_HOSTPORT
-        fromService:
-          name: awakelab-marketplace-screenshot
-          type: pserv
-          property: hostport
-
-  - type: pserv
-    name: awakelab-marketplace-screenshot
-    runtime: docker
-    dockerfilePath: ./screenshot-service/Dockerfile
-    dockerContext: ./screenshot-service
-    # Los servicios privados no tienen plan gratuito en Render; este es el
-    # más pequeño disponible.
-    plan: 0.5c-512mb
