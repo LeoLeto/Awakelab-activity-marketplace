@@ -58,6 +58,7 @@ render_header('Claves de colegios', 'Salir', 'logout.php');
     <div class="eyebrow">Panel de administración</div>
     <h1>Colegios y claves de API</h1>
     <p class="lead">Cada colegio necesita su propia clave para publicar juegos en el Marketplace. Genérala aquí y pásasela a quien administre su Moodle.</p>
+    <p style="margin-top:10px;"><a href="users.php" class="btn btn-secondary btn-sm">&#128101; Ver profesores registrados</a></p>
 </div>
 
 <div style="display:flex; gap:16px; margin-bottom:22px;">

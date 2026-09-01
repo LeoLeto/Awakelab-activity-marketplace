@@ -29,6 +29,17 @@ function register_user(string $email, string $password, string $name): array {
     return ['ok' => true, 'id' => (int) $pdo->lastInsertId()];
 }
 
+/**
+ * Listado de profesores registrados, para el panel de administración
+ * (público/admin/users.php). Solo lectura: no hay gestión de cuentas de
+ * profesor por ahora, igual que list_admins() para administradores.
+ */
+function list_users(): array {
+    $pdo = marketplace_db();
+    return $pdo->query('SELECT id, email, name, created_at FROM users ORDER BY created_at DESC')
+        ->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function verify_login(string $email, string $password): ?array {
     $email = trim(mb_strtolower($email));
 
