@@ -30,8 +30,19 @@ CREATE TABLE IF NOT EXISTS games (
     prompt TEXT,
     subject TEXT,
     html TEXT NOT NULL,
+    times_used INTEGER NOT NULL DEFAULT 0,
     published_at INTEGER NOT NULL,
     updated_at INTEGER NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_games_school ON games(school_id);
+
+CREATE TABLE IF NOT EXISTS ratings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    game_id INTEGER NOT NULL REFERENCES games(id),
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    stars INTEGER NOT NULL,
+    created_at INTEGER NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_ratings_game_user ON ratings(game_id, user_id);

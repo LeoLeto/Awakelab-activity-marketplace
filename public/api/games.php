@@ -40,6 +40,12 @@ if ($method === 'GET') {
     exit;
 }
 
+if ($method === 'POST' && $id > 0 && ($_GET['action'] ?? '') === 'use') {
+    increment_game_usage($id);
+    echo json_encode(['ok' => true]);
+    exit;
+}
+
 if ($method === 'POST') {
     $body = read_json_body();
     $title = trim((string) ($body['title'] ?? ''));

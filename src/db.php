@@ -50,6 +50,25 @@ function marketplace_migrate(PDO $pdo): void {
         // con el esquema anterior.
         $pdo->exec('ALTER TABLE admins RENAME COLUMN email TO username');
     }
+
+    $gamescolumns = $pdo->query("PRAGMA table_info(games)")->fetchAll(PDO::FETCH_COLUMN, 1);
+    if (!in_array('times_used', $gamescolumns, true)) {
+        $pdo->exec('ALTER TABLE games ADD COLUMN times_used INTEGER NOT NULL DEFAULT 0');
+    }
+
+    $tables = $pdo->query("SELECT name FROM sqlite_master WHERE type = 'table'")->fetchAll(PDO::FETCH_COLUMN, 0);
+    if (!in_array('ratings', $tables, true)) {
+        $pdo->exec(
+            'CREATE TABLE ratings (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                game_id INTEGER NOT NULL REFERENCES games(id),
+                user_id INTEGER NOT NULL REFERENCES users(id),
+                stars INTEGER NOT NULL,
+                created_at INTEGER NOT NULL
+            )'
+        );
+        $pdo->exec('CREATE UNIQUE INDEX idx_ratings_game_user ON ratings(game_id, user_id)');
+    }
 }
 
 function marketplace_start_session(): void {
