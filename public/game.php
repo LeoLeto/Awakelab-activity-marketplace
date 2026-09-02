@@ -62,13 +62,6 @@ $rated = $_GET['rated'] ?? '';
 .star-rating label:hover ~ label { color: var(--cian-fuerte); }
 </style>
 
-<?php if (trim((string) $game['prompt']) !== '') { ?>
-<div class="card">
-    <h2>&#128221; Descripción original</h2>
-    <p class="muted" style="color:var(--texto-suave); font-size:14px;"><?= nl2br(htmlspecialchars($game['prompt'])) ?></p>
-</div>
-<?php } ?>
-
 <div class="card" style="padding:0; overflow:hidden;">
     <div style="padding:14px 18px; border-bottom:1px solid var(--borde); display:flex; align-items:center; gap:8px;">
         <span style="width:10px;height:10px;border-radius:50%;background:#ff6b6b;display:inline-block;"></span>
