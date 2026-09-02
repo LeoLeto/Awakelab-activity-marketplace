@@ -52,6 +52,8 @@ render_header('Catálogo', 'Salir (' . $user['name'] . ')', 'logout.php');
                     <div class="meta">
                         <?php if ($game['subject']) { ?><span class="pill"><?= htmlspecialchars($game['subject']) ?></span><?php } ?>
                         <span class="pill pill-muted"><?= htmlspecialchars($game['school_name']) ?></span>
+                        <span class="pill">&#9733; <?= $game['avg_rating'] !== null ? round((float) $game['avg_rating'], 1) : '—' ?></span>
+                        <span class="pill pill-muted">Usado <?= (int) ($game['times_used'] ?? 0) ?></span>
                     </div>
                     <div class="spacer"></div>
                     <div class="foot">

@@ -18,6 +18,11 @@ if (!$game) {
 }
 
 render_header($game['title'], '&larr; Catálogo', 'catalog.php');
+
+$avgrating = $game['avg_rating'] !== null ? round((float) $game['avg_rating'], 1) : null;
+$ratingcount = (int) ($game['rating_count'] ?? 0);
+$timesused = (int) ($game['times_used'] ?? 0);
+$rated = $_GET['rated'] ?? '';
 ?>
 <div class="hero">
     <div class="eyebrow">Ficha del juego</div>
@@ -26,8 +31,36 @@ render_header($game['title'], '&larr; Catálogo', 'catalog.php');
         <span class="pill pill-muted">&#127979; <?= htmlspecialchars($game['school_name']) ?></span>
         <?php if ($game['subject']) { ?><span class="pill"><?= htmlspecialchars($game['subject']) ?></span><?php } ?>
         <span class="pill pill-muted">Actualizado el <?= date('d/m/Y', (int) $game['updated_at']) ?></span>
+        <span class="pill">&#9733; <?= $avgrating !== null ? $avgrating . ' (' . $ratingcount . ')' : 'Sin valoraciones' ?></span>
+        <span class="pill pill-muted">Usado <?= $timesused ?> <?= $timesused === 1 ? 'vez' : 'veces' ?></span>
     </div>
 </div>
+
+<?php if ($rated === 'ok') { render_notice('¡Gracias por tu valoración!'); } ?>
+<?php if ($rated === 'error') { render_notice('No se pudo guardar la valoración.', 'error'); } ?>
+
+<div class="card">
+    <h2>&#11088; Valora este juego</h2>
+    <form method="post" action="rate.php">
+        <input type="hidden" name="game_id" value="<?= (int) $game['id'] ?>">
+        <div class="star-rating">
+            <input type="radio" id="star5" name="stars" value="5"><label for="star5">&#9733;</label>
+            <input type="radio" id="star4" name="stars" value="4"><label for="star4">&#9733;</label>
+            <input type="radio" id="star3" name="stars" value="3"><label for="star3">&#9733;</label>
+            <input type="radio" id="star2" name="stars" value="2"><label for="star2">&#9733;</label>
+            <input type="radio" id="star1" name="stars" value="1"><label for="star1">&#9733;</label>
+        </div>
+        <p><button type="submit" class="btn-secondary">Enviar valoración</button></p>
+    </form>
+</div>
+<style>
+.star-rating { display: inline-flex; flex-direction: row-reverse; font-size: 30px; }
+.star-rating input { display: none; }
+.star-rating label { color: var(--borde); cursor: pointer; padding: 0 2px; }
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label { color: var(--cian-fuerte); }
+</style>
 
 <?php if (trim((string) $game['prompt']) !== '') { ?>
 <div class="card">
