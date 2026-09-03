@@ -44,41 +44,41 @@ export function rateGame(id, stars) {
 }
 
 export function adminLogin(username, password) {
-    return request('/admin/login', { method: 'POST', body: JSON.stringify({ username, password }) });
+    return request('/api/admin/login', { method: 'POST', body: JSON.stringify({ username, password }) });
 }
 
 export function adminLogout() {
-    return request('/admin/logout', { method: 'POST' });
+    return request('/api/admin/logout', { method: 'POST' });
 }
 
 export function adminMe() {
-    return request('/admin/me');
+    return request('/api/admin/me');
 }
 
 export function listSchools() {
-    return request('/admin/schools');
+    return request('/api/admin/schools');
 }
 
 export function createSchool(name) {
-    return request('/admin/schools', { method: 'POST', body: JSON.stringify({ name }) });
+    return request('/api/admin/schools', { method: 'POST', body: JSON.stringify({ name }) });
 }
 
 export function toggleSchool(id, active) {
-    return request('/admin/schools/' + id + '/toggle', { method: 'POST', body: JSON.stringify({ active }) });
+    return request('/api/admin/schools/' + id + '/toggle', { method: 'POST', body: JSON.stringify({ active }) });
 }
 
 export function listAdmins() {
-    return request('/admin/admins');
+    return request('/api/admin/admins');
 }
 
 export function createAdmin(username, password) {
-    return request('/admin/admins', { method: 'POST', body: JSON.stringify({ username, password }) });
+    return request('/api/admin/admins', { method: 'POST', body: JSON.stringify({ username, password }) });
 }
 
 export function toggleAdmin(id, active) {
-    return request('/admin/admins/' + id + '/toggle', { method: 'POST', body: JSON.stringify({ active }) });
+    return request('/api/admin/admins/' + id + '/toggle', { method: 'POST', body: JSON.stringify({ active }) });
 }
 
 export function listUsers() {
-    return request('/admin/users');
+    return request('/api/admin/users');
 }

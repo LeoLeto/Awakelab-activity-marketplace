@@ -1,7 +1,9 @@
 /**
  * Panel de administracion (colegios/claves, otros admins, listado de
- * profesores). Puerto directo de Marketplace/public/admin/*.php — JSON por
- * ahora, sin HTML todavia (Fase 2).
+ * profesores). Puerto directo de Marketplace/public/admin/*.php.
+ *
+ * Se monta en /api/admin, no en /admin: /admin es la URL que ve el usuario en
+ * el navegador y la atiende la SPA (web/src/AdminApp.jsx). Ver server.js.
  */
 const express = require('express');
 const {
