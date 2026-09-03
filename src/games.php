@@ -10,8 +10,14 @@ require_once __DIR__ . '/screenshot.php';
 /**
  * Listado ligero (sin el HTML completo) para el catálogo web y para el
  * selector "Usar del Marketplace" del plugin de Moodle.
+ *
+ * $sort: 'recent' (por defecto, última actualización), 'rating' (mejor
+ * valorados primero) o 'used' (más usados primero). En SQLite los NULL
+ * ordenan como los valores más pequeños, así que en un ORDER BY ... DESC los
+ * juegos sin valoraciones quedan al final solos — justo el orden que
+ * interesa, sin tratamiento especial.
  */
-function list_games(string $search = ''): array {
+function list_games(string $search = '', string $sort = 'recent', int $limit = 0): array {
     $pdo = marketplace_db();
 
     $sql = 'SELECT games.id, games.title, games.subject, games.updated_at, games.times_used,
@@ -29,7 +35,22 @@ function list_games(string $search = ''): array {
         $params[] = '%' . $search . '%';
     }
 
-    $sql .= ' ORDER BY games.updated_at DESC';
+    $orderby = match ($sort) {
+        // "Populares": combina valoración media y usos en una sola cifra, sin
+        // normalizar nada — para el tamaño de catálogo que maneja esto es
+        // suficiente y facil de explicar (cada estrella de media pesa como 20
+        // usos). Es el orden por defecto del catálogo.
+        'popular' => '(COALESCE(avg_rating, 0) * 20 + games.times_used) DESC, games.updated_at DESC',
+        'rating' => 'avg_rating DESC, games.updated_at DESC',
+        'used' => 'games.times_used DESC, games.updated_at DESC',
+        'published' => 'games.published_at DESC',
+        default => 'games.updated_at DESC',
+    };
+    $sql .= ' ORDER BY ' . $orderby;
+
+    if ($limit > 0) {
+        $sql .= ' LIMIT ' . $limit;
+    }
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
