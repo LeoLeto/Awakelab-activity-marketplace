@@ -1,0 +1,18 @@
+{
+  "name": "awakelab-marketplace-api",
+  "version": "1.0.0",
+  "description": "Backend Node/Express del Marketplace de Awakelab (reescritura de la version PHP)",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0"
+  }
+}
