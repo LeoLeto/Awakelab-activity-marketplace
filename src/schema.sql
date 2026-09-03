@@ -46,3 +46,9 @@ CREATE TABLE IF NOT EXISTS ratings (
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_ratings_game_user ON ratings(game_id, user_id);
+
+CREATE TABLE IF NOT EXISTS sessions (
+    sid TEXT PRIMARY KEY,
+    session TEXT NOT NULL,
+    expires INTEGER NOT NULL
+);

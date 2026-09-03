@@ -12,11 +12,18 @@ const session = require('express-session');
 const apiRoutes = require('./routes/api');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
+const { SqliteSessionStore } = require('./src/sqliteSessionStore');
 
 const app = express();
 
+if (!process.env.SESSION_SECRET) {
+    console.warn('[aviso] SESSION_SECRET no está definida: usando el secreto de desarrollo por defecto. ' +
+        'Defínela como variable de entorno antes de desplegar en producción.');
+}
+
 app.use(express.json({ limit: '10mb' })); // los juegos generados con IA pueden pesar varios cientos de KB de HTML.
 app.use(session({
+    store: new SqliteSessionStore(), // sobrevive a los reinicios de pm2, a diferencia del MemoryStore por defecto.
     secret: process.env.SESSION_SECRET || 'awakelab-marketplace-dev-secret',
     resave: false,
     saveUninitialized: false,

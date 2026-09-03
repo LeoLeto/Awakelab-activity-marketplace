@@ -29,6 +29,14 @@ function getDb() {
     if (isnew) {
         const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
         db.exec(schema);
+    } else {
+        // Migracion idempotente para bases de datos ya creadas antes de que
+        // existiera esta tabla (igual que marketplace_migrate() en el PHP).
+        db.exec(`CREATE TABLE IF NOT EXISTS sessions (
+            sid TEXT PRIMARY KEY,
+            session TEXT NOT NULL,
+            expires INTEGER NOT NULL
+        )`);
     }
 
     return db;

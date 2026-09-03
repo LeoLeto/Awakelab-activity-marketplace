@@ -42,3 +42,43 @@ export function getGame(id) {
 export function rateGame(id, stars) {
     return request('/auth/games/' + id + '/rate', { method: 'POST', body: JSON.stringify({ stars }) });
 }
+
+export function adminLogin(username, password) {
+    return request('/admin/login', { method: 'POST', body: JSON.stringify({ username, password }) });
+}
+
+export function adminLogout() {
+    return request('/admin/logout', { method: 'POST' });
+}
+
+export function adminMe() {
+    return request('/admin/me');
+}
+
+export function listSchools() {
+    return request('/admin/schools');
+}
+
+export function createSchool(name) {
+    return request('/admin/schools', { method: 'POST', body: JSON.stringify({ name }) });
+}
+
+export function toggleSchool(id, active) {
+    return request('/admin/schools/' + id + '/toggle', { method: 'POST', body: JSON.stringify({ active }) });
+}
+
+export function listAdmins() {
+    return request('/admin/admins');
+}
+
+export function createAdmin(username, password) {
+    return request('/admin/admins', { method: 'POST', body: JSON.stringify({ username, password }) });
+}
+
+export function toggleAdmin(id, active) {
+    return request('/admin/admins/' + id + '/toggle', { method: 'POST', body: JSON.stringify({ active }) });
+}
+
+export function listUsers() {
+    return request('/admin/users');
+}
