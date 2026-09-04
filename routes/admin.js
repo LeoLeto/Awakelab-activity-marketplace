@@ -1,51 +1,17 @@
 /**
  * Panel de administracion (colegios/claves, otros admins, listado de
- * profesores). Puerto directo de Marketplace/public/admin/*.php — JSON por
- * ahora, sin HTML todavia (Fase 2).
+ * profesores). Puerto directo de Marketplace/public/admin/keys.php y
+ * users.php. El login/logout/sesion actual viven en routes/session.js
+ * (unificado con el de profesor).
  */
 const express = require('express');
 const {
-    verifyAdminLogin, loginAdmin, logoutAdmin, currentAdmin, requireAdmin,
-    ensureFirstAdmin, listAdmins, createAdmin, countActiveAdmins, setAdminActive,
+    requireAdmin, listAdmins, createAdmin, countActiveAdmins, setAdminActive,
 } = require('../src/adminAuth');
 const { createSchoolKey, listSchools, setSchoolActive } = require('../src/schools');
 const { listUsers } = require('../src/auth');
-const { getDb } = require('../src/db');
 
 const router = express.Router();
-
-router.post('/login', (req, res) => {
-    const { username, password } = req.body || {};
-
-    const db = getDb();
-    const noAdminsYet = db.prepare('SELECT COUNT(*) AS c FROM admins').get().c === 0;
-
-    if (noAdminsYet) {
-        if (String(password || '').length < 8) {
-            return res.status(400).json({ ok: false, error: 'La contraseña debe tener al menos 8 caracteres.' });
-        }
-        ensureFirstAdmin(username, password);
-        const admin = verifyAdminLogin(username, password);
-        loginAdmin(req, admin);
-        return res.json({ ok: true, admin: { id: admin.id, username: admin.username } });
-    }
-
-    const admin = verifyAdminLogin(username, password);
-    if (!admin) {
-        return res.status(401).json({ ok: false, error: 'Usuario o contraseña incorrectos.' });
-    }
-    loginAdmin(req, admin);
-    res.json({ ok: true, admin: { id: admin.id, username: admin.username } });
-});
-
-router.post('/logout', (req, res) => {
-    logoutAdmin(req);
-    res.json({ ok: true });
-});
-
-router.get('/me', (req, res) => {
-    res.json({ ok: true, admin: currentAdmin(req) });
-});
 
 router.use(requireAdmin);
 

@@ -6,6 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': 'http://localhost:8100',
+      '/session': 'http://localhost:8100',
       '/auth': 'http://localhost:8100',
       '/admin': 'http://localhost:8100',
       '/thumbs': 'http://localhost:8100',

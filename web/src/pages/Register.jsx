@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { register, login } from '../api'
+import { register, sessionLogin } from '../api'
 
 export default function Register({ onLoggedIn }) {
   const [name, setName] = useState('')
@@ -16,8 +16,8 @@ export default function Register({ onLoggedIn }) {
     setBusy(true)
     try {
       await register(email, password, name)
-      const data = await login(email, password)
-      onLoggedIn(data.user)
+      const data = await sessionLogin(email, password)
+      onLoggedIn({ type: data.type, data: data.user })
       navigate('/')
     } catch (err) {
       setError(err.message)

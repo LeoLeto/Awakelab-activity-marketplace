@@ -11,20 +11,20 @@ async function request(path, options = {}) {
     return data;
 }
 
-export function login(email, password) {
-    return request('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+export function sessionLogin(identifier, password) {
+    return request('/session/login', { method: 'POST', body: JSON.stringify({ identifier, password }) });
+}
+
+export function sessionLogout() {
+    return request('/session/logout', { method: 'POST' });
+}
+
+export function sessionMe() {
+    return request('/session/me');
 }
 
 export function register(email, password, name) {
     return request('/auth/register', { method: 'POST', body: JSON.stringify({ email, password, name }) });
-}
-
-export function logout() {
-    return request('/auth/logout', { method: 'POST' });
-}
-
-export function me() {
-    return request('/auth/me');
 }
 
 export function listGames(q, sort) {
@@ -41,18 +41,6 @@ export function getGame(id) {
 
 export function rateGame(id, stars) {
     return request('/auth/games/' + id + '/rate', { method: 'POST', body: JSON.stringify({ stars }) });
-}
-
-export function adminLogin(username, password) {
-    return request('/admin/login', { method: 'POST', body: JSON.stringify({ username, password }) });
-}
-
-export function adminLogout() {
-    return request('/admin/logout', { method: 'POST' });
-}
-
-export function adminMe() {
-    return request('/admin/me');
 }
 
 export function listSchools() {

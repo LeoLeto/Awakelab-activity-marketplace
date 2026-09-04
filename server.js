@@ -1,9 +1,9 @@
 /**
- * Backend Node/Express del Marketplace (Fase 1: solo API JSON, sin React
- * todavia — ver el plan de migracion). Sirve:
- *   /api/*    -> contrato usado por Moodle y el conector LTI (X-API-Key)
- *   /auth/*   -> sesion de profesor + valoraciones
- *   /admin/*  -> panel de administracion (colegios/claves/admins)
+ * Backend Node/Express del Marketplace. Sirve:
+ *   /api/*     -> contrato usado por Moodle y el conector LTI (X-API-Key)
+ *   /session/* -> login/logout/sesion unificado (profesor o admin)
+ *   /auth/*    -> registro de profesor, catalogo y valoraciones
+ *   /admin/*   -> panel de administracion (colegios/claves/admins)
  */
 const path = require('path');
 const express = require('express');
@@ -12,6 +12,7 @@ const session = require('express-session');
 const apiRoutes = require('./routes/api');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
+const sessionRoutes = require('./routes/session');
 const { SqliteSessionStore } = require('./src/sqliteSessionStore');
 
 const app = express();
@@ -33,6 +34,7 @@ app.use(session({
 app.use('/thumbs', express.static(path.join(__dirname, 'public', 'thumbs')));
 
 app.use('/api', apiRoutes);
+app.use('/session', sessionRoutes);
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 
