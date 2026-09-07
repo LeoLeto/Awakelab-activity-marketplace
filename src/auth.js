@@ -5,6 +5,7 @@
  */
 const bcrypt = require('bcryptjs');
 const { getDb } = require('./db');
+const { currentAdmin } = require('./adminAuth');
 
 function registerUser(email, password, name) {
     email = String(email || '').trim().toLowerCase();
@@ -76,4 +77,24 @@ function requireLogin(req, res, next) {
     next();
 }
 
-module.exports = { registerUser, verifyLogin, loginUser, logoutUser, currentUser, requireLogin, listUsers };
+/**
+ * Middleware de Express: deja pasar tanto a un profesor como a un admin (el
+ * panel de admin tambien puede ver el catalogo — ver routes/auth.js). Solo
+ * marca req.currentUser cuando de verdad es un profesor: un admin no tiene
+ * fila en la tabla users, asi que nunca deberia poder valorar un juego.
+ */
+function requireLoginOrAdmin(req, res, next) {
+    const user = currentUser(req);
+    if (user) {
+        req.currentUser = user;
+        return next();
+    }
+    if (currentAdmin(req)) {
+        return next();
+    }
+    res.status(401).json({ ok: false, error: 'No has iniciado sesión.' });
+}
+
+module.exports = {
+    registerUser, verifyLogin, loginUser, logoutUser, currentUser, requireLogin, requireLoginOrAdmin, listUsers,
+};

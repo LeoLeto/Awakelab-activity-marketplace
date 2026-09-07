@@ -1,11 +1,12 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { logout } from '../api'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { sessionLogout } from '../api'
 
-export default function Header({ user, onLoggedOut }) {
+export default function Header({ session, onLoggedOut }) {
   const navigate = useNavigate()
+  const isAdmin = session.type === 'admin'
 
   async function handleLogout() {
-    await logout()
+    await sessionLogout()
     onLoggedOut()
     navigate('/login')
   }
@@ -19,13 +20,18 @@ export default function Header({ user, onLoggedOut }) {
           alt="Awakelab"
         />
       </Link>
-      {user && (
-        <nav>
-          <button type="button" className="linklike" onClick={handleLogout}>
-            Salir ({user.name})
-          </button>
+      {isAdmin && (
+        <nav className="tabs">
+          <NavLink to="/" end className={({ isActive }) => 'tab' + (isActive ? ' tab-active' : '')}>Marketplace</NavLink>
+          <NavLink to="/admin" className={({ isActive }) => 'tab' + (isActive ? ' tab-active' : '')}>Panel de admin</NavLink>
         </nav>
       )}
+      <nav>
+        {isAdmin && <Link to="/admin/profesores">Profesores registrados</Link>}
+        <button type="button" className="linklike" onClick={handleLogout}>
+          Salir ({isAdmin ? session.data.username : session.data.name})
+        </button>
+      </nav>
     </header>
   )
 }

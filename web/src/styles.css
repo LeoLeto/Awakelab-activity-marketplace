@@ -59,6 +59,15 @@ header.site nav a, header.site nav button.linklike {
 }
 header.site nav a:hover, header.site nav button.linklike:hover { color: var(--cian-oscuro); text-decoration: none; transform: none; box-shadow: none; }
 
+/* ---------- Pestañas (Marketplace / Panel de admin) ---------- */
+header.site nav.tabs { gap: 4px; background: var(--azul-claro); padding: 4px; border-radius: 10px; }
+header.site nav.tabs .tab {
+    padding: 7px 16px; border-radius: 7px; font-size: 13.5px; font-weight: 600;
+    color: var(--texto-suave);
+}
+header.site nav.tabs .tab:hover { color: var(--azul-oscuro); text-decoration: none; }
+header.site nav.tabs .tab-active { background: var(--superficie); color: var(--azul-oscuro2); box-shadow: var(--sombra-suave); }
+
 main { max-width: 1080px; margin: 0 auto; padding: 40px 24px 72px; }
 main.narrow { max-width: 480px; }
 

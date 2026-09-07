@@ -7,8 +7,9 @@ function formatDate(unixSeconds) {
   return new Date(unixSeconds * 1000).toLocaleDateString('es-ES')
 }
 
-export default function GameDetail() {
+export default function GameDetail({ session }) {
   const { id } = useParams()
+  const canRate = session.type === 'teacher'
   const [game, setGame] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -78,13 +79,15 @@ export default function GameDetail() {
         </div>
       </div>
 
-      {ratedState === 'ok' && <div className="notice notice-success"><span>&#10003;</span><span>¡Gracias por tu valoración!</span></div>}
-      {ratedState === 'error' && <div className="notice notice-error"><span>&#9888;</span><span>No se pudo guardar la valoración.</span></div>}
+      {canRate && ratedState === 'ok' && <div className="notice notice-success"><span>&#10003;</span><span>¡Gracias por tu valoración!</span></div>}
+      {canRate && ratedState === 'error' && <div className="notice notice-error"><span>&#9888;</span><span>No se pudo guardar la valoración.</span></div>}
 
-      <div className="card">
-        <h2>&#11088; Valora este juego</h2>
-        <StarRating value={myStars} onChange={handleRate} disabled={submittingStars > 0} />
-      </div>
+      {canRate && (
+        <div className="card">
+          <h2>&#11088; Valora este juego</h2>
+          <StarRating value={myStars} onChange={handleRate} disabled={submittingStars > 0} />
+        </div>
+      )}
 
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
         <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--borde)', display: 'flex', alignItems: 'center', gap: 8 }}>

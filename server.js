@@ -1,14 +1,17 @@
 /**
  * Backend Node/Express del Marketplace. Sirve SOLO JSON: las paginas las
  * pinta la SPA de React (web/), que en produccion sirve nginx como estatico.
- *   /api/*        -> contrato usado por Moodle y el conector LTI (X-API-Key)
- *   /api/admin/*  -> panel de administracion (colegios/claves/admins), sesion
- *   /auth/*       -> sesion de profesor + valoraciones
+ *   /api/*         -> contrato usado por Moodle y el conector LTI (X-API-Key)
+ *   /api/admin/*   -> panel de administracion (colegios/claves/admins), sesion
+ *   /api/session/* -> login/logout/sesion unificado (profesor o admin)
+ *   /auth/*        -> registro de profesor, catalogo y valoraciones
  *
  * Importante: ninguno de estos prefijos puede coincidir con una ruta de la
  * SPA, o la peticion del navegador se la queda el backend y la pagina no
  * llega a cargarse nunca. Por eso el panel vive en /api/admin y no en
- * /admin, que es la URL que el usuario ve en el navegador.
+ * /admin, que es la URL que el usuario ve en el navegador, y el login
+ * unificado en /api/session y no en /session: asi nginx solo tiene que
+ * proxyear /api, /auth y /thumbs.
  */
 const path = require('path');
 const express = require('express');
@@ -17,6 +20,7 @@ const session = require('express-session');
 const apiRoutes = require('./routes/api');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
+const sessionRoutes = require('./routes/session');
 const { SqliteSessionStore } = require('./src/sqliteSessionStore');
 
 const app = express();
@@ -37,10 +41,12 @@ app.use(session({
 
 app.use('/thumbs', express.static(path.join(__dirname, 'public', 'thumbs')));
 
-// El orden importa: '/api/admin' tiene que ir ANTES que '/api', porque
-// routes/api.js aplica requireApiKey a todo lo que cuelga de el y dejaria el
-// panel de administracion pidiendo una X-API-Key que el navegador no tiene.
+// El orden importa: '/api/admin' y '/api/session' tienen que ir ANTES que
+// '/api', porque routes/api.js aplica requireApiKey a todo lo que cuelga de
+// el y dejaria el panel y el login pidiendo una X-API-Key que el navegador
+// no tiene.
 app.use('/api/admin', adminRoutes);
+app.use('/api/session', sessionRoutes);
 app.use('/api', apiRoutes);
 app.use('/auth', authRoutes);
 
