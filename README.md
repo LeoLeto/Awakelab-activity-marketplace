@@ -30,7 +30,7 @@ Esto es lo más fácil de romper, así que conviene tenerlo claro:
 | `/api/admin/*` | backend | Panel de administración (sesión de admin, no API key) |
 | `/auth/*` | backend | Sesión de profesor, catálogo y valoraciones |
 | `/thumbs/*` | backend | Miniaturas PNG generadas |
-| **todo lo demás** | **SPA** | `/`, `/login`, `/registro`, `/juegos/:id`, `/admin`, `/admin/login`, `/admin/profesores` |
+| **todo lo demás** | **SPA** | `/`, `/login`, `/registro`, `/juegos/:id`, `/admin`, `/admin/profesores` |
 
 **`/admin` es una ruta del navegador, no del API.** El panel de administración
 se ve en `/admin`, pero sus llamadas van a `/api/admin/*`. Si se enrutara
@@ -64,9 +64,13 @@ El servidor de desarrollo de Vite ya hace de proxy de `/api`, `/auth` y
 
 ## Primer uso
 
-1. Abre `http://localhost:5173/admin/login` y crea la cuenta de administrador
-   (Awakelab). **La primera vez el usuario y la contraseña que escribas se dan
-   de alta automáticamente**; la contraseña necesita 8 caracteres como mínimo.
+1. El login es unificado (`/login`), para profesores y admins a la vez: si el
+   identificador tiene "@" se busca como correo de profesor, si no, como
+   usuario de admin. Abre `http://localhost:5173/login` y entra con un
+   usuario **sin "@"** (p. ej. `awakelab`) para crear la cuenta de
+   administrador — **la primera vez que no existe ningún admin, el usuario y
+   la contraseña que escribas se dan de alta automáticamente**; la contraseña
+   necesita 8 caracteres como mínimo.
 2. En el panel, crea un colegio y copia su clave de API — **solo se muestra
    una vez**, después solo se guarda su hash.
 3. En Moodle, en los ajustes del plugin `awakegame`, pega:
@@ -146,10 +150,14 @@ no los borres en un despliegue.
 ## Estructura
 
 - `server.js` — arranque y montaje de rutas.
-- `routes/` — `api.js` (Moodle, X-API-Key), `auth.js` (profesores), `admin.js` (panel).
+- `routes/` — `api.js` (Moodle, X-API-Key), `session.js` (login/logout
+  unificado), `auth.js` (registro de profesor, catálogo, valoraciones),
+  `admin.js` (panel).
 - `src/` — lógica compartida: base de datos, autenticación, juegos, colegios,
   cliente del servicio de capturas y almacén de sesiones.
-- `web/` — SPA de React: `TeacherApp` (catálogo) y `AdminApp` (panel).
+- `web/` — SPA de React con un único `App.jsx`: comprueba la sesión
+  (`/api/session/me`) y muestra el catálogo o el panel de admin según el tipo
+  de cuenta devuelto, sin ramas separadas por rol.
 - `screenshot-service/` — microservicio de capturas (Puppeteer/Chromium).
 
 ## Notas
